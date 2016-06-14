@@ -1,0 +1,149 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>表盘</title>
+</head>
+<style>
+body{
+	background:url(./clock2.jpg) center 62px no-repeat;
+	background-size: 500px 500px;
+}
+	#a{
+		/*border:1px solid green;*/
+		position: absolute;
+		margin:auto;
+		left:0;
+		right: 0;
+		top:0;
+		bottom:0;
+		background:url(./aaa.png) -310px -320px no-repeat;
+	}
+</style>
+<body>
+	<canvas id="a" width="400" height="400"></canvas>
+</body>
+<script>
+	var canvas = document.querySelector('#a');
+	var ctx = canvas.getContext('2d');
+	var deg = function(deg){
+		return Math.PI/180*deg;
+	}
+ // 表盘 
+ var deg = function(deg){
+ 	return Math.PI/180*deg;
+ }
+ var draw = function(){
+
+ 	var now = new Date();
+ 	ctx.clearRect(0,0,400,400)
+ 	ctx.save();
+//arc
+ctx.beginPath();
+ctx.translate(200,200);
+ctx.arc(0,0,130,0,deg(360))
+ctx.shadowOffsetX = -2;
+ctx.shadowOffsetY = -2;
+ctx.shadowBlur = 6; 
+ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+// ctx.stroke();
+ctx.closePath();
+
+//刻度
+/*ctx.save();
+ctx.beginPath();
+for( var i=0;i<60;i++){
+	ctx.moveTo(0,-120);
+	ctx.lineTo(0,-130);
+	if( i%5 === 0){
+		ctx.strokeStyle = "#4B4B4B";
+		ctx.lineWidth = 3;
+		ctx.moveTo(0,-100);
+		ctx.lineTo(0,-130);
+	}
+	ctx.rotate(deg(6))
+}
+ctx.stroke();
+ctx.closePath();
+ctx.restore();*/
+
+//圆
+ctx.save();	
+ctx.beginPath();
+ctx.moveTo(5,0);
+ctx.arc(0,0,5,0,deg(360))
+ctx.strokeStyle = 'red';
+ctx.stroke()
+ctx.closePath();
+ctx.restore();
+
+//秒针
+var second = now.getSeconds();
+var s = 360*(second/60)
+ctx.save();
+ctx.rotate(deg(s))
+ctx.beginPath();
+ctx.moveTo(0,20);
+ctx.lineTo(0,7);
+ctx.moveTo(0,-7);
+ctx.lineTo(0,-100);
+ctx.strokeStyle = 'red';
+ctx.stroke()
+ctx.closePath();
+ctx.restore();
+
+
+//分针
+var minute = now.getMinutes();
+var f = 360*(minute*60 +second)/3400;
+// console.log(f)
+ctx.save();
+ctx.rotate(deg(f))
+ctx.beginPath();
+// ctx.rotate(deg(30))
+ctx.lineWidth = 5;
+ctx.lineCap = "round"; 
+ctx.moveTo(0,20);
+ctx.lineTo(0,8);
+ctx.moveTo(0,-8);
+ctx.lineTo(0,-80);
+ctx.strokeStyle="#2E2E2E"
+ctx.stroke()
+ctx.closePath();
+ctx.restore();
+
+//时针
+
+var hours = now.getHours();
+var h = 360*( hours*3600 + minute*60 + second)/43200;
+ctx.save();
+ctx.rotate(deg(h))
+ctx.beginPath();
+// ctx.rotate(deg(60))
+ctx.lineWidth = 5;
+ctx.lineCap = "round"; 
+ctx.moveTo(0,20);
+ctx.lineTo(0,8);
+ctx.moveTo(0,-8);
+ctx.lineTo(0,-60);
+ctx.strokeStyle="#2E2E2E"
+ctx.stroke()
+ctx.closePath();
+ctx.restore();
+
+//字
+ctx.save();
+ctx.beginPath();
+ctx.translate(-60,0)
+ctx.font = "12px Arial";
+ctx.fillText("MAD BY ALEX.WWK",10,50);
+ctx.closePath();
+ctx.restore();
+
+ctx.restore();
+}
+draw();
+setInterval(draw,1000);
+
+</script>
+</html>
